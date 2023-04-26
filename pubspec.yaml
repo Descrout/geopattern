@@ -1,11 +1,10 @@
 name: geopattern_flutter
 description: Geometric patterns for flutter, based on geo_pattern ruby library.
 version: 0.1.1
-author: Suyash <suyash93@protonmail.com>
 homepage: https://github.com/suyash/geopattern
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: '>=2.19.5 <3.0.0'
 
 dependencies:
   flutter:
