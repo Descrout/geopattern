@@ -1,9 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: constant_identifier_names
 
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
+
+import 'package:geopattern_flutter/helpers.dart';
 import 'package:geopattern_flutter/patterns/chevrons.dart';
 import 'package:geopattern_flutter/patterns/concentric_circles.dart';
 import 'package:geopattern_flutter/patterns/diamonds.dart';
@@ -16,7 +20,6 @@ import 'package:geopattern_flutter/patterns/pattern.dart' as geo;
 import 'package:geopattern_flutter/patterns/plus_signs.dart';
 import 'package:geopattern_flutter/patterns/squares.dart';
 import 'package:geopattern_flutter/patterns/triangles.dart';
-import 'package:geopattern_flutter/helpers.dart';
 
 enum PatternType {
   Hexagons,
@@ -194,4 +197,59 @@ class MistikPattern {
       return null;
     }
   }
+
+  MistikPattern copyWith({
+    PatternType? type,
+    Color? bgColor,
+    List<Color>? fillColors,
+    List<Color>? strokeColors,
+    double? size,
+    double? strokeWidth,
+  }) {
+    return MistikPattern(
+      type: type ?? this.type,
+      bgColor: bgColor ?? this.bgColor,
+      fillColors: fillColors ?? this.fillColors,
+      strokeColors: strokeColors ?? this.strokeColors,
+      size: size ?? this.size,
+      strokeWidth: strokeWidth ?? this.strokeWidth,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'type': type.name,
+      'bgColor': bgColor.value,
+      'fillColors': fillColors.map((x) => x.value).toList(),
+      'strokeColors': strokeColors.map((x) => x.value).toList(),
+      'size': size,
+      'strokeWidth': strokeWidth,
+    };
+  }
+
+  factory MistikPattern.fromMap(Map<String, dynamic> map) {
+    return MistikPattern(
+      type: PatternType.values
+          .firstWhere((element) => element.name == map['type']),
+      bgColor: Color(map['bgColor'] as int),
+      fillColors: List<Color>.from(
+        (map['fillColors'] as List<int>).map<Color>(
+          (x) => Color(x),
+        ),
+      ),
+      strokeColors: List<Color>.from(
+        (map['strokeColors'] as List<int>).map<Color>(
+          (x) => Color(x),
+        ),
+      ),
+      size: map['size'] as double,
+      strokeWidth:
+          map['strokeWidth'] != null ? map['strokeWidth'] as double : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory MistikPattern.fromJson(String source) =>
+      MistikPattern.fromMap(json.decode(source) as Map<String, dynamic>);
 }
