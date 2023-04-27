@@ -54,7 +54,7 @@ class MistikPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawColor(pattern.bgColor, BlendMode.color);
+    canvas.drawColor(pattern.bgColor, BlendMode.src);
     for (var i = 0.0; i < size.height; i += _pattern.size.height) {
       for (var j = 0.0; j < size.width; j += _pattern.size.width) {
         _pattern.paint(canvas, Offset(j, i));
