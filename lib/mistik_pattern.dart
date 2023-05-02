@@ -2,6 +2,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
@@ -193,6 +194,26 @@ class MistikPattern {
 
       final picture = recorder.endRecording();
       return await picture.toImage(width.toInt(), height.toInt());
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<File?> saveToFile(String path, double width, double height) async {
+    final img = await toImage(width, height);
+    if (img == null) return null;
+
+    try {
+      final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
+      if (pngBytes == null) throw Exception("Cannot read image bytes.");
+
+      final buffer = pngBytes.buffer;
+      return await File(path).writeAsBytes(
+        buffer.asUint8List(
+          pngBytes.offsetInBytes,
+          pngBytes.lengthInBytes,
+        ),
+      );
     } catch (_) {
       return null;
     }
