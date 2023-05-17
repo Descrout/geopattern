@@ -4,6 +4,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
@@ -213,6 +214,24 @@ class MistikPattern {
           pngBytes.offsetInBytes,
           pngBytes.lengthInBytes,
         ),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<Uint8List?> getImageBytes(double width, double height) async {
+    final img = await toImage(width, height);
+    if (img == null) return null;
+
+    try {
+      final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
+      if (pngBytes == null) throw Exception("Cannot read image bytes.");
+
+      final buffer = pngBytes.buffer;
+      return buffer.asUint8List(
+        pngBytes.offsetInBytes,
+        pngBytes.lengthInBytes,
       );
     } catch (_) {
       return null;
